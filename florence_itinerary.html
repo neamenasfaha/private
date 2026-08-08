@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24 Hours in Florence — Itinerary & Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#152530;
+    --ink-2:#1e3541;
+    --parchment:#f2ead4;
+    --parchment-2:#e8dcbd;
+    --gold:#c69a46;
+    --gold-bright:#e0b968;
+    --terracotta:#b2593f;
+    --sage:#7c8b6f;
+    --line:#3a5361;
+    --text-on-dark:#eae2c8;
+    --text-muted-dark:#a9b6bd;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text-on-dark);
+    font-family:'EB Garamond', serif;
+    font-size:17px;
+    line-height:1.5;
+  }
+  .header{
+    padding:44px 32px 28px;
+    text-align:center;
+    border-bottom:1px solid rgba(198,154,70,0.35);
+    background:
+      radial-gradient(ellipse at top, rgba(198,154,70,0.10), transparent 60%),
+      var(--ink);
+    position:relative;
+  }
+  .header .eyebrow{
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    font-size:13px;
+    color:var(--gold-bright);
+    margin-bottom:10px;
+  }
+  .header h1{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:52px;
+    margin:0 0 8px;
+    color:var(--text-on-dark);
+    letter-spacing:0.01em;
+  }
+  .header .sub{
+    color:var(--text-muted-dark);
+    font-size:16px;
+    font-style:italic;
+  }
+  .header .rule{
+    width:120px;
+    height:1px;
+    margin:18px auto 0;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .progress-wrap{
+    max-width:520px;
+    margin:18px auto 0;
+    padding:0 24px;
+  }
+  .progress-bar{
+    height:4px;
+    background:rgba(198,154,70,0.18);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--gold);
+    width:0%;
+    transition:width 0.3s ease;
+  }
+  .progress-label{
+    text-align:center;
+    font-size:12px;
+    color:var(--text-muted-dark);
+    margin-top:6px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+
+  .daytabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding:22px 16px 0;
+  }
+  .daytab{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:19px;
+    letter-spacing:0.03em;
+    padding:9px 26px;
+    border:1px solid rgba(198,154,70,0.4);
+    background:transparent;
+    color:var(--text-muted-dark);
+    cursor:pointer;
+    border-radius:2px;
+    transition:all 0.2s ease;
+  }
+  .daytab.active{
+    background:var(--gold);
+    color:var(--ink);
+    border-color:var(--gold);
+  }
+  .daytab:hover:not(.active){
+    border-color:var(--gold-bright);
+    color:var(--gold-bright);
+  }
+
+  .layout{
+    display:grid;
+    grid-template-columns:minmax(360px, 500px) 1fr;
+    gap:0;
+    max-width:1440px;
+    margin:28px auto 0;
+    padding:0 24px 48px;
+  }
+  @media (max-width: 860px){
+    .layout{grid-template-columns:1fr; gap:24px;}
+    #map{height:420px !important;}
+  }
+
+  .timeline{
+    padding-right:28px;
+  }
+  .stop{
+    display:flex;
+    gap:14px;
+    padding:16px 14px;
+    border-radius:4px;
+    border:1px solid transparent;
+    transition:background 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
+  }
+  .stop:hover, .stop.active{
+    background:rgba(198,154,70,0.08);
+    border-color:rgba(198,154,70,0.3);
+  }
+  .stop.done{
+    opacity:0.5;
+  }
+  .stop.done .name{
+    text-decoration:line-through;
+    text-decoration-color:var(--gold);
+  }
+  .stop .check{
+    flex:0 0 24px;
+    height:24px;
+    width:24px;
+    margin-top:6px;
+    border:1.5px solid var(--gold);
+    border-radius:4px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;
+    transition:background 0.15s ease;
+    flex-shrink:0;
+  }
+  .stop .check.checked{
+    background:var(--gold);
+  }
+  .stop .check.checked::after{
+    content:"✓";
+    color:var(--ink);
+    font-weight:700;
+    font-size:15px;
+  }
+  .stop .marker{
+    flex:0 0 34px;
+    height:34px;
+    width:34px;
+    border-radius:50%;
+    background:var(--gold);
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Cormorant Garamond', serif;
+    font-weight:700;
+    font-size:15px;
+    margin-top:2px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .stop .marker.transit{
+    background:transparent;
+    border:1px solid var(--sage);
+    color:var(--sage);
+    font-size:12px;
+    cursor:default;
+  }
+  .stop .content{flex:1; min-width:0; cursor:pointer;}
+  .stop .time{
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    color:var(--gold-bright);
+    font-size:14px;
+    letter-spacing:0.02em;
+  }
+  .stop .name{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:22px;
+    color:var(--text-on-dark);
+    margin:2px 0 4px;
+  }
+  .stop .blurb{
+    font-size:15.5px;
+    color:var(--text-muted-dark);
+  }
+  .stop .address{
+    font-size:13.5px;
+    color:var(--sage);
+    margin-top:5px;
+    font-style:italic;
+  }
+  .stop .address::before{
+    content:"📍 ";
+  }
+  .stop .tag{
+    display:inline-block;
+    margin-top:6px;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border-radius:2px;
+  }
+  .tag.ticket{background:rgba(178,89,63,0.22); color:#e2a68f; border:1px solid rgba(178,89,63,0.5);}
+  .tag.free{background:rgba(124,139,111,0.22); color:#b9c7ab; border:1px solid rgba(124,139,111,0.5);}
+  .tag.reserved{background:rgba(198,154,70,0.22); color:var(--gold-bright); border:1px solid rgba(198,154,70,0.5);}
+
+  .connector{
+    width:1px;
+    background:linear-gradient(var(--gold) 40%, transparent);
+    margin-left:31px;
+    height:14px;
+    opacity:0.5;
+  }
+
+  .map-col{
+    position:sticky;
+    top:20px;
+    align-self:start;
+  }
+  #map{
+    height:640px;
+    width:100%;
+    border-radius:6px;
+    border:1px solid rgba(198,154,70,0.35);
+    filter: sepia(12%) saturate(85%) brightness(0.97);
+  }
+  .map-caption{
+    font-size:13px;
+    color:var(--text-muted-dark);
+    font-style:italic;
+    text-align:center;
+    margin-top:10px;
+  }
+
+  .day-panel{display:none;}
+  .day-panel.active{display:block;}
+
+  .leaflet-popup-content-wrapper{
+    background:var(--parchment);
+    color:var(--ink);
+    border-radius:3px;
+  }
+  .leaflet-popup-content{
+    font-family:'EB Garamond', serif;
+    font-size:15px;
+  }
+  .leaflet-popup-content b{
+    font-family:'Cormorant Garamond', serif;
+    font-size:17px;
+  }
+  .leaflet-popup-content .popup-addr{
+    font-size:13px;
+    color:#5a4a2e;
+    font-style:italic;
+  }
+  .leaflet-popup-tip{background:var(--parchment);}
+
+  .custom-pin{
+    background:var(--gold);
+    color:var(--ink);
+    border:2px solid var(--ink);
+    border-radius:50% 50% 50% 0;
+    width:30px;
+    height:30px;
+    transform:rotate(-45deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Cormorant Garamond', serif;
+    font-weight:700;
+    font-size:14px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.4);
+  }
+  .custom-pin span{transform:rotate(45deg);}
+
+  footer{
+    text-align:center;
+    padding:20px;
+    color:var(--text-muted-dark);
+    font-size:13px;
+    font-style:italic;
+    border-top:1px solid rgba(198,154,70,0.2);
+  }
+
+  .reset-link{
+    display:block;
+    text-align:center;
+    margin-top:14px;
+    font-size:12px;
+    color:var(--text-muted-dark);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:'EB Garamond', serif;
+  }
+  .reset-link:hover{color:var(--gold-bright);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Firenze &middot; 24 Hours</div>
+  <h1>Your Florence Itinerary</h1>
+  <div class="sub">From arrival at Amerigo Vespucci Airport to departure at Santa Maria Novella</div>
+  <div class="rule"></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 15 stops complete</div>
+</div>
+
+<div class="daytabs">
+  <button class="daytab active" data-day="1">Day 1</button>
+  <button class="daytab" data-day="2">Day 2</button>
+</div>
+
+<div class="layout">
+  <div class="timeline">
+    <div class="day-panel active" id="panel-1"></div>
+    <div class="day-panel" id="panel-2"></div>
+    <button class="reset-link" id="resetBtn">Reset all checkmarks</button>
+  </div>
+  <div class="map-col">
+    <div id="map"></div>
+    <div class="map-caption">Gold pins mark each stop &middot; dashed line traces the day's route</div>
+  </div>
+</div>
+
+<footer>Hotel Esperanza &middot; Via dell'Inferno 3, Florence &mdash; tap any stop to center the map, tap the checkbox to mark it done</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const data = {
+  1: [
+    {time:"1:40 PM", name:"Land at FLR", blurb:"Deplane, customs/immigration if needed, baggage claim.", tag:null, address:"Amerigo Vespucci Airport, Via del Termine 11, 50127 Firenze FI", lat:43.809462, lng:11.202759, transit:false},
+    {time:"2:20 PM", name:"Taxi to hotel area", blurb:"~20 min taxi ride, fixed rate ~€22.", tag:null, address:null, lat:null, lng:null, transit:true},
+    {time:"2:45 PM", name:"Hotel Esperanza — check in", blurb:"Short walk from taxi drop point (ZTL zone).", tag:"free", address:"Via dell'Inferno 3, 50123 Firenze FI", lat:43.770928, lng:11.250678, transit:false},
+    {time:"3:15 PM", name:"Late lunch: Il Ricettario", blurb:"Authentic Tuscan trattoria between the Uffizi and Ponte Vecchio. Reservation made.", tag:"reserved", address:"Via Lambertesca 22R, 50122 Firenze FI", lat:43.769100, lng:11.255200, transit:false},
+    {time:"4:15 PM", name:"Ponte Vecchio & Piazza della Signoria", blurb:"Landmark bridge with jewelry shops + main city square with open-air statues.", tag:"free", address:"Piazza della Signoria, 50122 Firenze FI", lat:43.769686, lng:11.255642, transit:false},
+    {time:"5:00 PM", name:"Duomo & Baptistery (exterior)", blurb:"Florence's iconic cathedral — free to view exterior/piazza.", tag:"ticket", tagNote:"only for dome/Baptistery entry", address:"Piazza del Duomo, 50122 Firenze FI", lat:43.773145, lng:11.255960, transit:false},
+    {time:"5:45 PM", name:"Wander Oltrarno / San Lorenzo Market", blurb:"Artsy neighborhood + outdoor leather/souvenir market.", tag:"free", address:"Piazza del Mercato Centrale, 50123 Firenze FI", lat:43.776468, lng:11.252834, transit:false},
+    {time:"6:45 PM", name:"Piazzale Michelangelo at sunset", blurb:"Hilltop lookout, best panoramic view of the city. Sunset ~7:15 PM in mid-Sept.", tag:"free", address:"Piazzale Michelangelo, 50125 Firenze FI", lat:43.762931, lng:11.265056, transit:false},
+    {time:"8:30 PM", name:"Dinner: Trattoria Giovanni", blurb:"Reservation confirmed. Known for pappardelle with wild boar and truffle pasta.", tag:"reserved", address:"Via Sant'Agostino 38r, 50125 Firenze FI", lat:43.767593, lng:11.245948, transit:false},
+    {time:"10:15 PM", name:"Gelato & evening stroll in Santo Spirito", blurb:"Gelateria Della Passera (2 min walk) then wander Piazza Santo Spirito for an easy, local evening.", tag:"free", address:"Via Toscanella 15/red, 50125 Firenze FI", lat:43.767168, lng:11.250645, transit:false}
+  ],
+  2: [
+    {time:"8:15 AM", name:"Coffee & pastry: Forno Becagli", blurb:"Beloved local bakery, known for flaky cornetti and excellent coffee. Full of locals, take-away only.", tag:"free", address:"Borgo Ognissanti 92, 50123 Firenze FI", lat:43.773196, lng:11.244672, transit:false},
+    {time:"9:30 AM", name:"Mercato Centrale (food market)", blurb:"Indoor food hall — pay per item at stalls.", tag:"free", address:"Piazza del Mercato Centrale, 50123 Firenze FI", lat:43.776468, lng:11.252834, transit:false},
+    {time:"10:45 AM", name:"Check out of hotel", blurb:"Pack up and gather luggage.", tag:"free", address:"Via dell'Inferno 3, 50123 Firenze FI", lat:43.770928, lng:11.250678, transit:false},
+    {time:"11:00 AM", name:"Basilica of Santa Maria Novella", blurb:"Right in the station piazza — Renaissance frescoes by Masaccio & Giotto.", tag:"free", address:"Piazza di Santa Maria Novella 18, 50123 Firenze FI", lat:43.774635, lng:11.249386, transit:false},
+    {time:"11:35 AM", name:"Arrive at Santa Maria Novella station", blurb:"Buffer time to find your platform before your 1 PM train.", tag:"free", address:"Piazza della Stazione, 50123 Firenze FI", lat:43.776672, lng:11.247916, transit:false}
+  ]
+};
+
+let map, markerLayer, routeLayer;
+let activeMarkers = {};
+let checkedState = {};
+
+function loadChecked(){
+  try{
+    const saved = localStorage.getItem('florence_itinerary_checked');
+    if(saved) checkedState = JSON.parse(saved);
+  }catch(e){ checkedState = {}; }
+}
+function saveChecked(){
+  try{ localStorage.setItem('florence_itinerary_checked', JSON.stringify(checkedState)); }catch(e){}
+}
+function stopKey(day, idx){ return day + '-' + idx; }
+
+function initMap(){
+  map = L.map('map', {scrollWheelZoom:false}).setView([43.7710, 11.2530], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom:19,
+    attribution:'&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  markerLayer = L.layerGroup().addTo(map);
+  routeLayer = L.layerGroup().addTo(map);
+}
+
+function pinIcon(num){
+  return L.divIcon({
+    className:'',
+    html:`<div class="custom-pin"><span>${num}</span></div>`,
+    iconSize:[30,30],
+    iconAnchor:[15,28]
+  });
+}
+
+function updateProgress(){
+  let total = 0, done = 0;
+  Object.keys(data).forEach(day => {
+    data[day].forEach((s, idx) => {
+      total++;
+      if(checkedState[stopKey(day, idx)]) done++;
+    });
+  });
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} of ${total} stops complete`;
+}
+
+function renderDay(dayNum){
+  const stops = data[dayNum];
+  const panel = document.getElementById('panel-'+dayNum);
+  panel.innerHTML = '';
+  let seq = 0;
+
+  stops.forEach((s, idx) => {
+    if(!s.transit) seq++;
+    const el = document.createElement('div');
+    const key = stopKey(dayNum, idx);
+    const isChecked = !!checkedState[key];
+    el.className = 'stop' + (isChecked ? ' done' : '');
+    el.dataset.idx = idx;
+
+    let tagHtml = '';
+    if(s.tag === 'ticket') tagHtml = `<span class="tag ticket">Ticket needed${s.tagNote ? ' — '+s.tagNote : ''}</span>`;
+    else if(s.tag === 'free') tagHtml = `<span class="tag free">No ticket needed</span>`;
+    else if(s.tag === 'reserved') tagHtml = `<span class="tag reserved">Reservation confirmed</span>`;
+
+    const addressHtml = s.address ? `<div class="address">${s.address}</div>` : '';
+
+    el.innerHTML = `
+      <div class="check ${isChecked ? 'checked' : ''}" data-key="${key}"></div>
+      <div class="marker ${s.transit ? 'transit' : ''}">${s.transit ? '→' : seq}</div>
+      <div class="content">
+        <div class="time">${s.time}</div>
+        <div class="name">${s.name}</div>
+        <div class="blurb">${s.blurb}</div>
+        ${addressHtml}
+        ${tagHtml}
+      </div>
+    `;
+
+    const checkEl = el.querySelector('.check');
+    checkEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      checkedState[key] = !checkedState[key];
+      saveChecked();
+      renderDay(dayNum);
+      updateProgress();
+    });
+
+    if(s.lat){
+      el.querySelector('.marker').addEventListener('click', () => focusStop(dayNum, idx));
+      el.querySelector('.content').addEventListener('click', () => focusStop(dayNum, idx));
+    }
+    panel.appendChild(el);
+
+    if(idx < stops.length - 1){
+      const conn = document.createElement('div');
+      conn.className = 'connector';
+      panel.appendChild(conn);
+    }
+  });
+}
+
+function drawMapForDay(dayNum){
+  markerLayer.clearLayers();
+  routeLayer.clearLayers();
+  activeMarkers = {};
+
+  const latlngs = [];
+  let seq = 0;
+
+  data[dayNum].forEach((s) => {
+    if(!s.transit) seq++;
+    if(!s.lat) return;
+    const marker = L.marker([s.lat, s.lng], {icon: pinIcon(seq)}).addTo(markerLayer);
+    marker.bindPopup(`<b>${s.name}</b><br>${s.time}<br><span class="popup-addr">${s.address || ''}</span>`);
+    activeMarkers[data[dayNum].indexOf(s)] = marker;
+    latlngs.push([s.lat, s.lng]);
+  });
+
+  if(latlngs.length > 1){
+    L.polyline(latlngs, {
+      color:'#c69a46',
+      weight:2.5,
+      dashArray:'6, 8',
+      opacity:0.85
+    }).addTo(routeLayer);
+  }
+
+  if(latlngs.length){
+    map.fitBounds(latlngs, {padding:[40,40]});
+  }
+}
+
+function focusStop(dayNum, idx){
+  document.querySelectorAll(`#panel-${dayNum} .stop`).forEach(el => el.classList.remove('active'));
+  document.querySelector(`#panel-${dayNum} .stop[data-idx="${idx}"]`).classList.add('active');
+  const marker = activeMarkers[idx];
+  if(marker){
+    map.setView(marker.getLatLng(), 16, {animate:true});
+    marker.openPopup();
+  }
+}
+
+document.querySelectorAll('.daytab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.daytab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const day = tab.dataset.day;
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-'+day).classList.add('active');
+    drawMapForDay(day);
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  checkedState = {};
+  saveChecked();
+  renderDay(1);
+  renderDay(2);
+  updateProgress();
+});
+
+loadChecked();
+initMap();
+renderDay(1);
+renderDay(2);
+drawMapForDay(1);
+updateProgress();
+</script>
+
+</body>
+</html>
