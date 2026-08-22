@@ -2,570 +2,487 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>24 Hours in Florence — Itinerary & Map</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Italy Itinerary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
-  :root{
-    --ink:#152530;
-    --ink-2:#1e3541;
-    --parchment:#f2ead4;
-    --parchment-2:#e8dcbd;
-    --gold:#c69a46;
-    --gold-bright:#e0b968;
-    --terracotta:#b2593f;
-    --sage:#7c8b6f;
-    --line:#3a5361;
-    --text-on-dark:#eae2c8;
-    --text-muted-dark:#a9b6bd;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--ink);
-    color:var(--text-on-dark);
-    font-family:'EB Garamond', serif;
-    font-size:17px;
-    line-height:1.5;
-  }
-  .header{
-    padding:44px 32px 28px;
-    text-align:center;
-    border-bottom:1px solid rgba(198,154,70,0.35);
-    background:
-      radial-gradient(ellipse at top, rgba(198,154,70,0.10), transparent 60%),
-      var(--ink);
-    position:relative;
-  }
-  .header .eyebrow{
-    font-family:'EB Garamond', serif;
-    font-style:italic;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    font-size:13px;
-    color:var(--gold-bright);
-    margin-bottom:10px;
-  }
-  .header h1{
-    font-family:'Cormorant Garamond', serif;
-    font-weight:600;
-    font-size:52px;
-    margin:0 0 8px;
-    color:var(--text-on-dark);
-    letter-spacing:0.01em;
-  }
-  .header .sub{
-    color:var(--text-muted-dark);
-    font-size:16px;
-    font-style:italic;
-  }
-  .header .rule{
-    width:120px;
-    height:1px;
-    margin:18px auto 0;
-    background:linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-  .progress-wrap{
-    max-width:520px;
-    margin:18px auto 0;
-    padding:0 24px;
-  }
-  .progress-bar{
-    height:4px;
-    background:rgba(198,154,70,0.18);
-    border-radius:2px;
-    overflow:hidden;
-  }
-  .progress-fill{
-    height:100%;
-    background:var(--gold);
-    width:0%;
-    transition:width 0.3s ease;
-  }
-  .progress-label{
-    text-align:center;
-    font-size:12px;
-    color:var(--text-muted-dark);
-    margin-top:6px;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-  }
+:root {
+  --gold:#B8912A; --gold-light:#D4AA4A; --gold-pale:#F5EDD6;
+  --ink:#1A1A1A; --muted:#7A7068; --surface:#FDFAF4; --card:#FFFFFF; --line:#E8DFC8;
+  --tag-free-bg:#EDF3E8; --tag-free-text:#3A6B2A;
+  --tag-ticket-bg:#FDEEE8; --tag-ticket-text:#9B3A1A;
+  --tag-res-bg:#FDF5E0; --tag-res-text:#7A5A00;
+  --tag-dress-bg:#EEE8F5; --tag-dress-text:#5A3A8A;
+  --transit-bg:#F7F4EE;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--surface);color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
 
-  .daytabs{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    padding:22px 16px 0;
-  }
-  .daytab{
-    font-family:'Cormorant Garamond', serif;
-    font-weight:600;
-    font-size:19px;
-    letter-spacing:0.03em;
-    padding:9px 26px;
-    border:1px solid rgba(198,154,70,0.4);
-    background:transparent;
-    color:var(--text-muted-dark);
-    cursor:pointer;
-    border-radius:2px;
-    transition:all 0.2s ease;
-  }
-  .daytab.active{
-    background:var(--gold);
-    color:var(--ink);
-    border-color:var(--gold);
-  }
-  .daytab:hover:not(.active){
-    border-color:var(--gold-bright);
-    color:var(--gold-bright);
-  }
+.header{background:var(--ink);padding:48px 20px 28px;text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(184,145,42,.18),transparent 70%);pointer-events:none;}
+.header-eyebrow{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-light);margin-bottom:10px;}
+.header h1{font-family:'Playfair Display',serif;font-size:clamp(28px,7vw,42px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:8px;}
+.header-sub{font-size:13px;color:rgba(255,255,255,.5);font-style:italic;}
+.header-rule{width:48px;height:2px;background:var(--gold);margin:16px auto 0;border-radius:1px;}
 
-  .layout{
-    display:grid;
-    grid-template-columns:minmax(360px, 500px) 1fr;
-    gap:0;
-    max-width:1440px;
-    margin:28px auto 0;
-    padding:0 24px 48px;
-  }
-  @media (max-width: 860px){
-    .layout{grid-template-columns:1fr; gap:24px;}
-    #map{height:420px !important;}
-  }
+.progress-section{background:var(--ink);padding:0 20px 22px;}
+.progress-track{background:rgba(255,255,255,.1);border-radius:999px;height:3px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gold-light);width:0%;transition:width .4s ease;border-radius:999px;}
+.progress-label{text-align:center;font-size:11px;color:rgba(255,255,255,.4);margin-top:8px;letter-spacing:.06em;text-transform:uppercase;}
 
-  .timeline{
-    padding-right:28px;
-  }
-  .stop{
-    display:flex;
-    gap:14px;
-    padding:16px 14px;
-    border-radius:4px;
-    border:1px solid transparent;
-    transition:background 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
-  }
-  .stop:hover, .stop.active{
-    background:rgba(198,154,70,0.08);
-    border-color:rgba(198,154,70,0.3);
-  }
-  .stop.done{
-    opacity:0.5;
-  }
-  .stop.done .name{
-    text-decoration:line-through;
-    text-decoration-color:var(--gold);
-  }
-  .stop .check{
-    flex:0 0 24px;
-    height:24px;
-    width:24px;
-    margin-top:6px;
-    border:1.5px solid var(--gold);
-    border-radius:4px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:transparent;
-    transition:background 0.15s ease;
-    flex-shrink:0;
-  }
-  .stop .check.checked{
-    background:var(--gold);
-  }
-  .stop .check.checked::after{
-    content:"✓";
-    color:var(--ink);
-    font-weight:700;
-    font-size:15px;
-  }
-  .stop .marker{
-    flex:0 0 34px;
-    height:34px;
-    width:34px;
-    border-radius:50%;
-    background:var(--gold);
-    color:var(--ink);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Cormorant Garamond', serif;
-    font-weight:700;
-    font-size:15px;
-    margin-top:2px;
-    cursor:pointer;
-    flex-shrink:0;
-  }
-  .stop .marker.transit{
-    background:transparent;
-    border:1px solid var(--sage);
-    color:var(--sage);
-    font-size:12px;
-    cursor:default;
-  }
-  .stop .content{flex:1; min-width:0; cursor:pointer;}
-  .stop .time{
-    font-family:'EB Garamond', serif;
-    font-style:italic;
-    color:var(--gold-bright);
-    font-size:14px;
-    letter-spacing:0.02em;
-  }
-  .stop .name{
-    font-family:'Cormorant Garamond', serif;
-    font-weight:600;
-    font-size:22px;
-    color:var(--text-on-dark);
-    margin:2px 0 4px;
-  }
-  .stop .blurb{
-    font-size:15.5px;
-    color:var(--text-muted-dark);
-  }
-  .stop .address{
-    font-size:13.5px;
-    color:var(--sage);
-    margin-top:5px;
-    font-style:italic;
-  }
-  .stop .address::before{
-    content:"📍 ";
-  }
-  .stop .tag{
-    display:inline-block;
-    margin-top:6px;
-    font-size:12px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    padding:2px 8px;
-    border-radius:2px;
-  }
-  .tag.ticket{background:rgba(178,89,63,0.22); color:#e2a68f; border:1px solid rgba(178,89,63,0.5);}
-  .tag.free{background:rgba(124,139,111,0.22); color:#b9c7ab; border:1px solid rgba(124,139,111,0.5);}
-  .tag.reserved{background:rgba(198,154,70,0.22); color:var(--gold-bright); border:1px solid rgba(198,154,70,0.5);}
+.day-nav-wrap{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.08);padding:10px 0 12px;}
+.day-nav{display:flex;gap:8px;overflow-x:auto;padding:0 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.day-nav::-webkit-scrollbar{display:none;}
+.day-btn{flex:0 0 auto;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:7px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.18);background:transparent;color:rgba(255,255,255,.55);cursor:pointer;white-space:nowrap;transition:all .18s ease;letter-spacing:.02em;}
+.day-btn.active{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600;}
+.day-btn:hover:not(.active){border-color:var(--gold-light);color:var(--gold-light);}
 
-  .connector{
-    width:1px;
-    background:linear-gradient(var(--gold) 40%, transparent);
-    margin-left:31px;
-    height:14px;
-    opacity:0.5;
-  }
+.section-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding:20px 20px 8px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
 
-  .map-col{
-    position:sticky;
-    top:20px;
-    align-self:start;
-  }
-  #map{
-    height:640px;
-    width:100%;
-    border-radius:6px;
-    border:1px solid rgba(198,154,70,0.35);
-    filter: sepia(12%) saturate(85%) brightness(0.97);
-  }
-  .map-caption{
-    font-size:13px;
-    color:var(--text-muted-dark);
-    font-style:italic;
-    text-align:center;
-    margin-top:10px;
-  }
+.day-panel{display:none;padding-bottom:16px;}
+.day-panel.active{display:block;}
 
-  .day-panel{display:none;}
-  .day-panel.active{display:block;}
+/* STOP CARD */
+.stop-card{margin:0 12px 2px;background:var(--card);border-radius:12px;border:1px solid var(--line);overflow:hidden;}
+.stop-card.done{opacity:.45;}
+.stop-card.done .stop-name{text-decoration:line-through;text-decoration-color:var(--gold);}
+.stop-card.is-transit{background:var(--transit-bg);border-style:dashed;}
+.stop-inner{display:flex;align-items:flex-start;gap:0;padding:14px 14px 14px 0;}
 
-  .leaflet-popup-content-wrapper{
-    background:var(--parchment);
-    color:var(--ink);
-    border-radius:3px;
-  }
-  .leaflet-popup-content{
-    font-family:'EB Garamond', serif;
-    font-size:15px;
-  }
-  .leaflet-popup-content b{
-    font-family:'Cormorant Garamond', serif;
-    font-size:17px;
-  }
-  .leaflet-popup-content .popup-addr{
-    font-size:13px;
-    color:#5a4a2e;
-    font-style:italic;
-  }
-  .leaflet-popup-tip{background:var(--parchment);}
+.stop-check{flex:0 0 46px;display:flex;align-items:flex-start;justify-content:center;padding-top:3px;}
+.check-box{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease;flex-shrink:0;}
+.check-box.checked{background:var(--gold);border-color:var(--gold);}
+.check-box.checked::after{content:'';display:block;width:12px;height:7px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translateY(-1px);}
 
-  .custom-pin{
-    background:var(--gold);
-    color:var(--ink);
-    border:2px solid var(--ink);
-    border-radius:50% 50% 50% 0;
-    width:30px;
-    height:30px;
-    transform:rotate(-45deg);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Cormorant Garamond', serif;
-    font-weight:700;
-    font-size:14px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.4);
-  }
-  .custom-pin span{transform:rotate(45deg);}
+.stop-seq{flex:0 0 28px;height:28px;border-radius:50%;background:var(--gold-pale);color:var(--gold);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0;}
+.stop-seq.transit{background:transparent;color:var(--muted);font-size:15px;}
 
-  footer{
-    text-align:center;
-    padding:20px;
-    color:var(--text-muted-dark);
-    font-size:13px;
-    font-style:italic;
-    border-top:1px solid rgba(198,154,70,0.2);
-  }
+.stop-content{flex:1;min-width:0;padding-left:12px;}
+.stop-time{font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;}
+.stop-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--ink);line-height:1.25;margin-bottom:5px;}
+.stop-blurb{font-size:13.5px;color:var(--muted);line-height:1.55;margin-bottom:6px;}
+.stop-address{font-size:12px;color:#2563EB;font-style:italic;margin-bottom:7px;display:flex;align-items:flex-start;gap:4px;text-decoration:none;}
+.stop-address:active{opacity:.7;}
 
-  .reset-link{
-    display:block;
-    text-align:center;
-    margin-top:14px;
-    font-size:12px;
-    color:var(--text-muted-dark);
-    text-decoration:underline;
-    cursor:pointer;
-    background:none;
-    border:none;
-    font-family:'EB Garamond', serif;
-  }
-  .reset-link:hover{color:var(--gold-bright);}
+/* Walk/transit buffer */
+.connector-row{display:flex;align-items:center;gap:8px;margin:0 12px 2px;padding:5px 14px 5px 58px;}
+.connector-line{width:1.5px;height:24px;background:var(--line);flex-shrink:0;}
+.walk-badge{font-size:11px;color:var(--muted);background:var(--line);border-radius:999px;padding:2px 9px;white-space:nowrap;display:flex;align-items:center;gap:4px;}
+
+.tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tag{font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:3px 8px;border-radius:999px;white-space:nowrap;}
+.tag-free{background:var(--tag-free-bg);color:var(--tag-free-text);}
+.tag-ticket{background:var(--tag-ticket-bg);color:var(--tag-ticket-text);}
+.tag-reserved{background:var(--tag-res-bg);color:var(--tag-res-text);}
+.tag-dress{background:var(--tag-dress-bg);color:var(--tag-dress-text);}
+
+/* MAP */
+.map-section{margin:16px 12px 24px;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+.map-label{background:var(--ink);color:rgba(255,255,255,.6);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;display:flex;align-items:center;gap:6px;}
+.day-map{height:280px;width:100%;}
+
+.reset-wrap{text-align:center;padding:4px 20px 28px;}
+.reset-btn{background:none;border:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;padding:8px;}
+
+footer{background:var(--ink);text-align:center;padding:20px;font-size:12px;color:rgba(255,255,255,.3);font-style:italic;line-height:1.7;}
+
+.custom-pin{background:var(--gold);color:var(--ink);border:2px solid #fff;border-radius:50% 50% 50% 0;width:28px;height:28px;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+.custom-pin span{transform:rotate(45deg);}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="eyebrow">Firenze &middot; 24 Hours</div>
-  <h1>Your Florence Itinerary</h1>
-  <div class="sub">From arrival at Amerigo Vespucci Airport to departure at Santa Maria Novella</div>
-  <div class="rule"></div>
+  <div class="header-eyebrow">September 2026</div>
+  <h1>Italy Itinerary</h1>
+  <div class="header-sub">Florence &middot; Tuscany &middot; Rome</div>
+  <div class="header-rule"></div>
 </div>
 
-<div class="progress-wrap">
-  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="progress-label" id="progressLabel">0 of 15 stops complete</div>
+<div class="progress-section">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">Tap a checkbox to mark stops done</div>
 </div>
 
-<div class="daytabs">
-  <button class="daytab active" data-day="1">Day 1</button>
-  <button class="daytab" data-day="2">Day 2</button>
+<div class="day-nav-wrap">
+  <div class="day-nav" id="dayNav"></div>
 </div>
 
-<div class="layout">
-  <div class="timeline">
-    <div class="day-panel active" id="panel-1"></div>
-    <div class="day-panel" id="panel-2"></div>
-    <button class="reset-link" id="resetBtn">Reset all checkmarks</button>
-  </div>
-  <div class="map-col">
-    <div id="map"></div>
-    <div class="map-caption">Gold pins mark each stop &middot; dashed line traces the day's route</div>
-  </div>
+<div id="panels"></div>
+
+<div class="reset-wrap">
+  <button class="reset-btn" id="resetBtn">Reset all checkmarks</button>
 </div>
 
-<footer>Hotel Esperanza &middot; Via dell'Inferno 3, Florence &mdash; tap any stop to center the map, tap the checkbox to mark it done</footer>
+<footer>
+  Florence: Hotel Esperanza, Via dell'Inferno 3<br>
+  Rome Airbnb: Vicolo del Giglio 26, 00186
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-const data = {
-  1: [
-    {time:"1:40 PM", name:"Land at FLR", blurb:"Deplane, customs/immigration if needed, baggage claim.", tag:null, address:"Amerigo Vespucci Airport, Via del Termine 11, 50127 Firenze FI", lat:43.809462, lng:11.202759, transit:false},
-    {time:"2:20 PM", name:"Taxi to hotel area", blurb:"~20 min taxi ride, fixed rate ~€22.", tag:null, address:null, lat:null, lng:null, transit:true},
-    {time:"2:45 PM", name:"Hotel Esperanza — check in", blurb:"Short walk from taxi drop point (ZTL zone).", tag:"free", address:"Via dell'Inferno 3, 50123 Firenze FI", lat:43.770928, lng:11.250678, transit:false},
-    {time:"3:15 PM", name:"Late lunch: Il Ricettario", blurb:"Authentic Tuscan trattoria between the Uffizi and Ponte Vecchio. Reservation made.", tag:"reserved", address:"Via Lambertesca 22R, 50122 Firenze FI", lat:43.769100, lng:11.255200, transit:false},
-    {time:"4:15 PM", name:"Ponte Vecchio & Piazza della Signoria", blurb:"Landmark bridge with jewelry shops + main city square with open-air statues.", tag:"free", address:"Piazza della Signoria, 50122 Firenze FI", lat:43.769686, lng:11.255642, transit:false},
-    {time:"5:00 PM", name:"Duomo & Baptistery (exterior)", blurb:"Florence's iconic cathedral — free to view exterior/piazza.", tag:"ticket", tagNote:"only for dome/Baptistery entry", address:"Piazza del Duomo, 50122 Firenze FI", lat:43.773145, lng:11.255960, transit:false},
-    {time:"5:45 PM", name:"Wander Oltrarno / San Lorenzo Market", blurb:"Artsy neighborhood + outdoor leather/souvenir market.", tag:"free", address:"Piazza del Mercato Centrale, 50123 Firenze FI", lat:43.776468, lng:11.252834, transit:false},
-    {time:"6:45 PM", name:"Piazzale Michelangelo at sunset", blurb:"Hilltop lookout, best panoramic view of the city. Sunset ~7:15 PM in mid-Sept.", tag:"free", address:"Piazzale Michelangelo, 50125 Firenze FI", lat:43.762931, lng:11.265056, transit:false},
-    {time:"8:30 PM", name:"Dinner: Trattoria Giovanni", blurb:"Reservation confirmed. Known for pappardelle with wild boar and truffle pasta.", tag:"reserved", address:"Via Sant'Agostino 38r, 50125 Firenze FI", lat:43.767593, lng:11.245948, transit:false},
-    {time:"10:15 PM", name:"Gelato & evening stroll in Santo Spirito", blurb:"Gelateria Della Passera (2 min walk) then wander Piazza Santo Spirito for an easy, local evening.", tag:"free", address:"Via Toscanella 15/red, 50125 Firenze FI", lat:43.767168, lng:11.250645, transit:false}
-  ],
-  2: [
-    {time:"8:15 AM", name:"Coffee & pastry: Forno Becagli", blurb:"Beloved local bakery, known for flaky cornetti and excellent coffee. Full of locals, take-away only.", tag:"free", address:"Borgo Ognissanti 92, 50123 Firenze FI", lat:43.773196, lng:11.244672, transit:false},
-    {time:"9:30 AM", name:"Mercato Centrale (food market)", blurb:"Indoor food hall — pay per item at stalls.", tag:"free", address:"Piazza del Mercato Centrale, 50123 Firenze FI", lat:43.776468, lng:11.252834, transit:false},
-    {time:"10:45 AM", name:"Check out of hotel", blurb:"Pack up and gather luggage.", tag:"free", address:"Via dell'Inferno 3, 50123 Firenze FI", lat:43.770928, lng:11.250678, transit:false},
-    {time:"11:00 AM", name:"Basilica of Santa Maria Novella", blurb:"Right in the station piazza — Renaissance frescoes by Masaccio & Giotto.", tag:"free", address:"Piazza di Santa Maria Novella 18, 50123 Firenze FI", lat:43.774635, lng:11.249386, transit:false},
-    {time:"11:35 AM", name:"Arrive at Santa Maria Novella station", blurb:"Buffer time to find your platform before your 1 PM train.", tag:"free", address:"Piazza della Stazione, 50123 Firenze FI", lat:43.776672, lng:11.247916, transit:false}
-  ]
-};
+const days = [
+  {
+    label:"Florence Thursday",
+    section:"🇮🇹 Florence",
+    stops:[
+      {time:"1:40 PM",name:"Land at FLR",blurb:"Deplane, customs/immigration, baggage claim.",tags:[],address:"Amerigo Vespucci Airport, Via del Termine 11, 50127 Firenze",transit:false,lat:43.8094,lng:11.2028},
+      {walk:"20 min taxi — fixed rate ~€22",transit:true},
+      {time:"2:45 PM",name:"Hotel Esperanza — check in",blurb:"Short walk from taxi drop point (ZTL zone). Drop your bags and freshen up.",tags:["free"],address:"Via dell'Inferno 3, 50123 Firenze",transit:false,lat:43.7709,lng:11.2507},
+      {walk:"5 min walk to lunch"},
+      {time:"3:15 PM",name:"Late lunch: Il Ricettario",blurb:"Authentic Tuscan trattoria between the Uffizi and Ponte Vecchio. Reservation confirmed.",tags:["reserved"],address:"Via Lambertesca 22R, 50122 Firenze",transit:false,lat:43.7691,lng:11.2552},
+      {walk:"3 min walk"},
+      {time:"4:15 PM",name:"Ponte Vecchio & Piazza della Signoria",blurb:"Landmark bridge lined with jewelry shops + open-air sculpture square. Allow 45–60 min.",tags:["free"],address:"Piazza della Signoria, 50122 Firenze",transit:false,lat:43.7697,lng:11.2556},
+      {walk:"5 min walk"},
+      {time:"5:15 PM",name:"Duomo & Baptistery (exterior)",blurb:"Florence's iconic cathedral. Free to admire outside. Ticket needed only to climb the dome or enter the Baptistery.",tags:["free"],address:"Piazza del Duomo, 50122 Firenze",transit:false,lat:43.7731,lng:11.2560},
+      {walk:"10 min walk across the Arno"},
+      {time:"5:45 PM",name:"Wander Oltrarno / San Lorenzo Market",blurb:"Artsy neighborhood south of the river + outdoor leather and souvenir market. Good for browsing.",tags:["free"],address:"Piazza del Mercato Centrale, 50123 Firenze",transit:false,lat:43.7765,lng:11.2528},
+      {walk:"15 min walk or short taxi uphill — save your legs"},
+      {time:"6:45 PM",name:"Piazzale Michelangelo at sunset",blurb:"Hilltop public lookout with the best panoramic view of Florence. Sunset ~7:15 PM in mid-September.",tags:["free"],address:"Piazzale Michelangelo, 50125 Firenze",transit:false,lat:43.7629,lng:11.2651},
+      {walk:"15 min walk or taxi back toward Oltrarno"},
+      {time:"8:30 PM",name:"Dinner: Trattoria Giovanni",blurb:"Reservation confirmed. Known for pappardelle with wild boar and truffle pasta. Smart casual — no shorts or flip-flops.",tags:["reserved","dress"],address:"Via Sant'Agostino 38r, 50125 Firenze",transit:false,lat:43.7676,lng:11.2459},
+      {walk:"2 min walk"},
+      {time:"10:15 PM",name:"Gelato & stroll — Santo Spirito",blurb:"Gelateria Della Passera then wander Piazza Santo Spirito. Easy end to a full first day.",tags:["free"],address:"Via Toscanella 15, 50125 Firenze",transit:false,lat:43.7672,lng:11.2506},
+    ]
+  },
+  {
+    label:"Florence Friday",
+    section:"🇮🇹 Florence → Tuscany",
+    stops:[
+      {time:"8:15 AM",name:"Coffee & pastry: Forno Becagli",blurb:"Beloved local bakery. Flaky cornetti, excellent espresso. Take-away only — grab and go.",tags:["free"],address:"Borgo Ognissanti 92, 50123 Firenze",transit:false,lat:43.7732,lng:11.2447},
+      {walk:"10 min walk"},
+      {time:"9:00 AM",name:"Mercato Centrale",blurb:"Indoor food hall — pay per item at the stalls. Good last look at Florentine produce before Tuscany.",tags:["free"],address:"Piazza del Mercato Centrale, 50123 Firenze",transit:false,lat:43.7765,lng:11.2528},
+      {walk:"10 min walk back to hotel"},
+      {time:"10:00 AM",name:"Back to hotel — pack up & check out",blurb:"Gather all luggage. Check out by 10:45 AM.",tags:[],address:"Via dell'Inferno 3, 50123 Firenze",transit:false,lat:43.7709,lng:11.2507},
+      {walk:"8 min walk to the basilica"},
+      {time:"11:00 AM",name:"Basilica of Santa Maria Novella",blurb:"Renaissance frescoes by Masaccio & Giotto, right in the station piazza. Must cover shoulders and knees to enter.",tags:["free","dress"],address:"Piazza di Santa Maria Novella 18, 50123 Firenze",transit:false,lat:43.7746,lng:11.2494},
+      {walk:"2 min walk to station"},
+      {time:"11:30 AM",name:"Meet friends at Santa Maria Novella station",blurb:"Rendezvous point. Grab a coffee at the station while you wait.",tags:[],address:"Piazza della Stazione, 50123 Firenze",transit:false,lat:43.7767,lng:11.2479},
+      {walk:"Board train together"},
+      {time:"~1:00 PM",name:"Train to Tuscany — wedding venue",blurb:"Head out together. Check in at the venue Friday afternoon.",tags:[],address:null,transit:true,lat:null,lng:null},
+    ]
+  },
+  {
+    label:"Tuscany Saturday",
+    section:"💒 Tuscany — Wedding",
+    stops:[
+      {time:"All day",name:"Wedding Day",blurb:"Details to be filled in after Rome planning.",tags:[],address:null,transit:false,lat:null,lng:null},
+    ]
+  },
+  {
+    label:"Tuscany Sunday",
+    section:"💒 Tuscany — Wedding",
+    stops:[
+      {time:"All day",name:"Wedding Weekend",blurb:"Details to be filled in after Rome planning.",tags:[],address:null,transit:false,lat:null,lng:null},
+    ]
+  },
+  {
+    label:"Monday",
+    section:"🚆 Travel to Rome",
+    stops:[
+      {time:"By 11:00 AM",name:"Check out of wedding venue",blurb:"Gather all luggage and head back toward Florence.",tags:[],address:null,transit:false,lat:null,lng:null},
+      {walk:"Travel to Florence Santa Maria Novella"},
+      {time:"~1:00 PM",name:"Train: Florence → Rome",blurb:"~1 hr 30 min on the high-speed Frecciargento or Frecciarossa. Book seats in advance on Trenitalia.",tags:[],address:"Santa Maria Novella, Piazza della Stazione, Firenze",transit:true,lat:43.7767,lng:11.2479},
+      {walk:"~30 min from Roma Termini to Airbnb by taxi (~€15) or Metro Line A to Spagna + walk"},
+      {time:"~3:00 PM",name:"Arrive Rome — check in Airbnb",blurb:"Check in after 2 PM. Drop bags and take a breath — you've been moving all day.",tags:[],address:"Vicolo del Giglio 26, 00186 Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"2 min walk from Airbnb"},
+      {time:"4:00 PM",name:"Campo de' Fiori",blurb:"Lively piazza steps from the Airbnb, lined with bars and cafes. Perfect first taste of Roman street life.",tags:["free"],address:"Piazza Campo de' Fiori, 00186 Rome",transit:false,lat:41.8956,lng:12.4722},
+      {walk:"10 min walk"},
+      {time:"5:00 PM",name:"Piazza Navona",blurb:"Stunning baroque square with Bernini's Four Rivers fountain. Allow 30–40 min to soak it in.",tags:["free"],address:"Piazza Navona, 00186 Rome",transit:false,lat:41.8992,lng:12.4731},
+      {walk:"8 min walk"},
+      {time:"6:00 PM",name:"Pantheon (exterior)",blurb:"Admire the 2,000-year-old facade and portico before dark. Save the interior for Friday with a ticket.",tags:["free"],address:"Piazza della Rotonda, 00186 Rome",transit:false,lat:41.8986,lng:12.4769},
+      {walk:"2 min walk"},
+      {time:"6:30 PM",name:"Aperitivo stop",blurb:"Grab a Negroni or Aperol Spritz at a bar near the Pantheon. Well-earned after a travel day.",tags:["free"],address:"Piazza della Rotonda area, Rome",transit:false,lat:41.8986,lng:12.4769},
+      {walk:"12 min walk"},
+      {time:"7:45 PM",name:"Trevi Fountain",blurb:"Much less crowded after dark and beautifully lit. Toss a coin — it's tradition.",tags:["free"],address:"Piazza di Trevi, 00187 Rome",transit:false,lat:41.9009,lng:12.4833},
+      {walk:"15 min walk back toward Airbnb"},
+      {time:"9:00 PM",name:"Dinner near Campo de' Fiori",blurb:"Authentic options within a 5 min walk of the Airbnb. Easy first night — don't overdo it.",tags:["free"],address:"Vicolo del Giglio area, 00186 Rome",transit:false,lat:41.8960,lng:12.4716},
+    ]
+  },
+  {
+    label:"Tuesday",
+    section:"🏛️ Ancient Rome + Monti",
+    stops:[
+      {time:"8:00 AM",name:"Coffee & cornetto",blurb:"Quick espresso and pastry at a local bar near the Airbnb. Don't skip breakfast — long morning ahead.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"25 min walk or Metro Line B to Colosseo (10 min)"},
+      {time:"9:00 AM",name:"Colosseum",blurb:"Rome's iconic 2,000-year-old amphitheater. Book timed entry in advance — go early to beat heat and crowds. Allow 1–1.5 hours inside.",tags:["ticket"],address:"Piazza del Colosseo 1, 00184 Rome",transit:false,lat:41.8902,lng:12.4922},
+      {walk:"3 min walk — connected site"},
+      {time:"10:30 AM",name:"Roman Forum",blurb:"Ancient political heart of the Roman Empire. Included with Colosseum ticket. Allow 1 hour.",tags:["ticket"],address:"Via Sacra, 00184 Rome",transit:false,lat:41.8925,lng:12.4853},
+      {walk:"5 min walk up the hill"},
+      {time:"11:45 AM",name:"Palatine Hill",blurb:"Ruins of imperial palaces with sweeping views over Circus Maximus. Included with Colosseum ticket. Allow 45 min.",tags:["ticket"],address:"Via Sacra, 00184 Rome",transit:false,lat:41.8893,lng:12.4879},
+      {walk:"5 min walk"},
+      {time:"1:00 PM",name:"Lunch near Colosseum",blurb:"You've earned a proper sit-down. Walk 2 blocks from the Colosseum into Monti for better food and lower prices than the tourist strip.",tags:["free"],address:"Rione Monti area, Rome",transit:false,lat:41.8953,lng:12.4889},
+      {walk:"10 min walk into Monti"},
+      {time:"2:30 PM",name:"Monti neighborhood",blurb:"Rome's oldest, hippest neighborhood. Wander cobblestone streets with independent boutiques, vintage shops and aperitivo bars. Allow 1.5–2 hours.",tags:["free"],address:"Via del Boschetto, 00184 Rome",transit:false,lat:41.8953,lng:12.4889},
+      {walk:"Still in Monti"},
+      {time:"4:30 PM",name:"Aperitivo in Monti",blurb:"Sit at an outdoor bar, rest your feet, and watch Roman life go by. You've covered a lot of ground today.",tags:["free"],address:"Via Panisperna, 00184 Rome",transit:false,lat:41.8961,lng:12.4872},
+      {walk:"Still in Monti — dinner nearby"},
+      {time:"6:30 PM",name:"Dinner in Monti",blurb:"Great authentic trattorias throughout the neighborhood. Try cacio e pepe or carbonara — this is the right part of town for it.",tags:["free"],address:"Via del Boschetto, 00184 Rome",transit:false,lat:41.8953,lng:12.4889},
+    ]
+  },
+  {
+    label:"Wednesday",
+    section:"🇻🇦 Vatican Day",
+    stops:[
+      {time:"8:00 AM",name:"Coffee & light breakfast",blurb:"Eat light before the Vatican — it's a long morning on your feet. No big breakfast.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"30 min by taxi (~€12) or Metro Line A to Ottaviano (20 min) — taxi recommended with luggage or groups"},
+      {time:"9:00 AM",name:"Vatican Museums & Sistine Chapel",blurb:"Book timed entry in advance. Busiest attraction in Rome — go right at opening. Allow 2.5–3 hours minimum. Cover shoulders and knees.",tags:["ticket","dress"],address:"Viale Vaticano, 00165 Rome",transit:false,lat:41.9064,lng:12.4536},
+      {walk:"10 min walk through Vatican grounds"},
+      {time:"12:00 PM",name:"St. Peter's Basilica & Square",blurb:"Free entry. Must cover shoulders and knees — bring a scarf or layer. Climb the dome for panoramic views (small extra fee, worth it).",tags:["free","dress"],address:"Piazza San Pietro, Vatican City",transit:false,lat:41.9022,lng:12.4539},
+      {walk:"5 min walk into Prati"},
+      {time:"1:30 PM",name:"Lunch in Prati",blurb:"Solid trattorias 2–3 blocks from St. Peter's. Walk away from the square — avoid the tourist traps immediately outside.",tags:["free"],address:"Prati neighborhood, Rome",transit:false,lat:41.9068,lng:12.4625},
+      {walk:"5 min walk along the river"},
+      {time:"3:00 PM",name:"Castel Sant'Angelo",blurb:"Ancient Roman mausoleum turned fortress. Great rooftop views over the Tiber. Allow 1–1.5 hours.",tags:["ticket"],address:"Lungotevere Castello 50, 00193 Rome",transit:false,lat:41.9031,lng:12.4663},
+      {walk:"25 min scenic walk along the Tiber back toward historic center"},
+      {time:"5:00 PM",name:"Stroll along the Tiber",blurb:"Walk back along the riverbank toward the historic center. Beautiful late afternoon light on the bridges.",tags:["free"],address:"Lungotevere dei Mellini, Rome",transit:false,lat:41.9031,lng:12.4663},
+      {walk:"10 min walk to Airbnb"},
+      {time:"6:00 PM",name:"Break & freshen up at Airbnb",blurb:"Vatican day is exhausting — mandatory rest before dinner. Put your feet up for an hour.",tags:[],address:"Vicolo del Giglio 26, 00186 Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"5 min walk"},
+      {time:"7:30 PM",name:"Dinner near Piazza Navona",blurb:"Authentic spots one or two blocks off the piazza — never eat directly on the square itself (tourist markup is extreme).",tags:["free"],address:"Piazza Navona area, 00186 Rome",transit:false,lat:41.8992,lng:12.4731},
+    ]
+  },
+  {
+    label:"Thursday",
+    section:"🌿 North Rome",
+    stops:[
+      {time:"8:00 AM",name:"Coffee & pastry",blurb:"Espresso at a local bar near the Airbnb before heading north.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"20 min by Metro Line A to Spagna (12 min) or taxi (~€10) — Metro is fastest here"},
+      {time:"8:45 AM",name:"Spanish Steps",blurb:"135-step baroque staircase built in 1725. Go early — tour groups arrive by 9:30 and it gets packed.",tags:["free"],address:"Piazza di Spagna, 00187 Rome",transit:false,lat:41.9058,lng:12.4824},
+      {walk:"2 min walk from the base of the Steps"},
+      {time:"9:30 AM",name:"Via Condotti (shopping)",blurb:"Rome's most famous luxury shopping street at the foot of the Spanish Steps. Gucci, Prada, Bulgari all here.",tags:["free"],address:"Via Condotti, 00187 Rome",transit:false,lat:41.9051,lng:12.4803},
+      {walk:"15 min walk north"},
+      {time:"10:30 AM",name:"Piazza del Popolo",blurb:"Grand neoclassical square — historic northern gateway to Rome, flanked by twin baroque churches and an Egyptian obelisk.",tags:["free"],address:"Piazza del Popolo, 00187 Rome",transit:false,lat:41.9110,lng:12.4762},
+      {walk:"10 min walk uphill (or take the ramp)"},
+      {time:"11:00 AM",name:"Pincio Terrace & Villa Borghese gardens",blurb:"Best panoramic skyline view in Rome — St. Peter's dome floating above the rooftops. Then stroll through the beautiful park. Allow 1.5 hours.",tags:["free"],address:"Viale dell'Orologio, 00197 Rome",transit:false,lat:41.9143,lng:12.4820},
+      {walk:"15 min walk through the park to the gallery"},
+      {time:"1:00 PM",name:"Lunch near Borghese",blurb:"Sit-down lunch near the park before the gallery. Don't eat too late — you have a 2 PM timed entry.",tags:["free"],address:"Viale Bruno Buozzi area, Rome",transit:false,lat:41.9143,lng:12.4820},
+      {walk:"5 min walk to gallery"},
+      {time:"2:00 PM",name:"Borghese Gallery",blurb:"World-class museum: Bernini sculptures and Caravaggio paintings. Strict 2-hour timed entry — must pre-book weeks in advance. Smart casual dress required.",tags:["ticket","dress"],address:"Piazzale Scipione Borghese 5, 00197 Rome",transit:false,lat:41.9141,lng:12.4921},
+      {walk:"Taxi or bus back to center (~20 min, €10)"},
+      {time:"4:30 PM",name:"Afternoon coffee & rest",blurb:"Back near the Airbnb — find a cafe and decompress. You've covered serious ground today.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"2 min walk"},
+      {time:"6:30 PM",name:"Aperitivo near Campo de' Fiori",blurb:"Wind down with a drink at a bar near home base before dinner.",tags:["free"],address:"Piazza Campo de' Fiori, 00186 Rome",transit:false,lat:41.8956,lng:12.4722},
+      {walk:"15 min walk or taxi"},
+      {time:"8:00 PM",name:"Dinner in Prati or Trastevere",blurb:"Prati (near Vatican) for great Roman classics in a local neighborhood. Trastevere for atmosphere and cobblestone charm. Both ~15 min from Airbnb.",tags:["free"],address:"Prati or Trastevere, Rome",transit:false,lat:41.8954,lng:12.4696},
+    ]
+  },
+  {
+    label:"Rome Friday",
+    section:"🏛️ Centro Storico + Trastevere",
+    stops:[
+      {time:"8:00 AM",name:"Coffee & pastry",blurb:"Slow start — you've earned it. Local bar near the Airbnb.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"5 min walk"},
+      {time:"9:00 AM",name:"Pantheon interior",blurb:"One of the best-preserved ancient buildings in the world — the 2,000-year-old concrete dome still stands. Small entry fee ~€5. Visit early before crowds build.",tags:["ticket"],address:"Piazza della Rotonda, 00186 Rome",transit:false,lat:41.8986,lng:12.4769},
+      {walk:"10 min wander through the streets"},
+      {time:"10:15 AM",name:"Wander Centro Storico",blurb:"Medieval alleyways around the Pantheon — Via dei Coronari, Via della Pace, Piazza della Minerva. Allow 1 hour of unhurried wandering.",tags:["free"],address:"Via dei Coronari, Rome",transit:false,lat:41.8997,lng:12.4730},
+      {walk:"8 min walk back toward Airbnb"},
+      {time:"11:30 AM",name:"Campo de' Fiori morning market",blurb:"Outdoor market right by the Airbnb, wraps up by noon. Great for snacks, local produce, olive oil and food gifts to take home.",tags:["free"],address:"Piazza Campo de' Fiori, 00186 Rome",transit:false,lat:41.8956,lng:12.4722},
+      {walk:"2 min walk"},
+      {time:"1:00 PM",name:"Lunch in Centro Storico",blurb:"Plenty of great spots around the Airbnb. Take your time — this afternoon is relaxed.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"10 min walk"},
+      {time:"2:30 PM",name:"Jewish Ghetto & Largo Argentina",blurb:"Historic Jewish quarter, then the ancient ruins of Largo Argentina — where Julius Caesar was assassinated. Free to view from street level.",tags:["free"],address:"Via del Portico d'Ottavia, 00186 Rome",transit:false,lat:41.8924,lng:12.4772},
+      {walk:"15 min walk across the Tiber"},
+      {time:"4:30 PM",name:"Head to Trastevere — explore",blurb:"Charming cobblestone streets and piazzas. Browse the small shops and artisan workshops in the alleyways before dinner.",tags:["free"],address:"Piazza di Santa Maria in Trastevere, Rome",transit:false,lat:41.8896,lng:12.4695},
+      {walk:"Still in Trastevere"},
+      {time:"6:30 PM",name:"Aperitivo in Trastevere",blurb:"The neighborhood really comes alive on Friday evenings. Great bars around Piazza di Santa Maria in Trastevere.",tags:["free"],address:"Piazza di Santa Maria in Trastevere, Rome",transit:false,lat:41.8896,lng:12.4695},
+      {walk:"Still in Trastevere — dinner nearby"},
+      {time:"8:00 PM",name:"Dinner in Trastevere",blurb:"One of Rome's most beloved dining neighborhoods — authentic, atmospheric, and perfect on a Friday night. Reservation strongly recommended.",tags:["reserved"],address:"Piazza di Santa Maria in Trastevere, Rome",transit:false,lat:41.8896,lng:12.4695},
+    ]
+  },
+  {
+    label:"Rome Saturday",
+    section:"❤️ Free Day",
+    stops:[
+      {time:"All day",name:"Free day in Rome",blurb:"No plans — revisit a favourite spot, shop for gifts, explore a neighbourhood you haven't seen yet, or just slow down and enjoy the city. Details to be filled in.",tags:[],address:"Vicolo del Giglio 26, 00186 Rome",transit:false,lat:41.8960,lng:12.4716},
+    ]
+  },
+  {
+    label:"Sunday",
+    section:"✈️ Departure",
+    stops:[
+      {time:"Morning",name:"Last coffee & stroll",blurb:"Final espresso at a local bar. Short walk around the neighborhood.",tags:["free"],address:"Vicolo del Giglio area, Rome",transit:false,lat:41.8960,lng:12.4716},
+      {walk:"Gather bags and call taxi"},
+      {time:"9:15 AM",name:"Taxi to FCO airport",blurb:"Fixed rate €55 from inside the Aurelian Walls to FCO — confirmed by law. ~40 min ride. Leave no later than 9:15 AM. Only use white Roma Capitale taxis — never accept an offer inside the terminal.",tags:[],address:"Vicolo del Giglio 26, 00186 Rome",transit:true,lat:41.8960,lng:12.4716},
+      {walk:"~40 min to airport"},
+      {time:"11:30 AM",name:"Flight departs FCO",blurb:"Aim to arrive at FCO by 10:00 AM for check-in, security, and boarding buffer. Safe travels!",tags:[],address:"Fiumicino Airport FCO, Rome",transit:false,lat:41.7999,lng:12.2462},
+    ]
+  },
+];
 
-let map, markerLayer, routeLayer;
-let activeMarkers = {};
-let checkedState = {};
+const tagMeta={free:{cls:'tag-free',label:'No ticket needed'},ticket:{cls:'tag-ticket',label:'Ticket required'},reserved:{cls:'tag-reserved',label:'Reservation confirmed'},dress:{cls:'tag-dress',label:'Dress code — cover shoulders & knees'}};
 
-function loadChecked(){
-  try{
-    const saved = localStorage.getItem('florence_itinerary_checked');
-    if(saved) checkedState = JSON.parse(saved);
-  }catch(e){ checkedState = {}; }
-}
-function saveChecked(){
-  try{ localStorage.setItem('florence_itinerary_checked', JSON.stringify(checkedState)); }catch(e){}
-}
-function stopKey(day, idx){ return day + '-' + idx; }
+function mapsUrl(a){return 'https://maps.apple.com/?q='+encodeURIComponent(a);}
 
-function initMap(){
-  map = L.map('map', {scrollWheelZoom:false}).setView([43.7710, 11.2530], 14);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:19,
-    attribution:'&copy; OpenStreetMap contributors'
-  }).addTo(map);
-  markerLayer = L.layerGroup().addTo(map);
-  routeLayer = L.layerGroup().addTo(map);
-}
+let checked={};
+try{const s=localStorage.getItem('italy_2026');if(s)checked=JSON.parse(s);}catch(e){}
+function save(){try{localStorage.setItem('italy_2026',JSON.stringify(checked));}catch(e){}}
+function key(di,si){return di+'-'+si;}
 
-function pinIcon(num){
-  return L.divIcon({
-    className:'',
-    html:`<div class="custom-pin"><span>${num}</span></div>`,
-    iconSize:[30,30],
-    iconAnchor:[15,28]
+function countAll(){
+  let total=0,done=0;
+  days.forEach((d,di)=>{
+    let si2=0;
+    d.stops.forEach(s=>{if(s.time!==undefined){const k=key(di,si2);total++;if(checked[k])done++;si2++;}});
   });
+  return{total,done};
 }
 
 function updateProgress(){
-  let total = 0, done = 0;
-  Object.keys(data).forEach(day => {
-    data[day].forEach((s, idx) => {
-      total++;
-      if(checkedState[stopKey(day, idx)]) done++;
-    });
-  });
-  const pct = total ? Math.round((done/total)*100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = `${done} of ${total} stops complete`;
+  const{total,done}=countAll();
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=done===0?'Tap a checkbox to mark stops done':`${done} of ${total} stops complete`;
 }
 
-function renderDay(dayNum){
-  const stops = data[dayNum];
-  const panel = document.getElementById('panel-'+dayNum);
-  panel.innerHTML = '';
-  let seq = 0;
+let maps={};
 
-  stops.forEach((s, idx) => {
-    if(!s.transit) seq++;
-    const el = document.createElement('div');
-    const key = stopKey(dayNum, idx);
-    const isChecked = !!checkedState[key];
-    el.className = 'stop' + (isChecked ? ' done' : '');
-    el.dataset.idx = idx;
+function buildDay(di){
+  const day=days[di];
+  const panel=document.createElement('div');
+  panel.className='day-panel';
+  panel.id='panel-'+di;
 
-    let tagHtml = '';
-    if(s.tag === 'ticket') tagHtml = `<span class="tag ticket">Ticket needed${s.tagNote ? ' — '+s.tagNote : ''}</span>`;
-    else if(s.tag === 'free') tagHtml = `<span class="tag free">No ticket needed</span>`;
-    else if(s.tag === 'reserved') tagHtml = `<span class="tag reserved">Reservation confirmed</span>`;
+  const sl=document.createElement('div');
+  sl.className='section-label';
+  sl.textContent=day.section;
+  panel.appendChild(sl);
 
-    const addressHtml = s.address ? `<div class="address">${s.address}</div>` : '';
-
-    el.innerHTML = `
-      <div class="check ${isChecked ? 'checked' : ''}" data-key="${key}"></div>
-      <div class="marker ${s.transit ? 'transit' : ''}">${s.transit ? '→' : seq}</div>
-      <div class="content">
-        <div class="time">${s.time}</div>
-        <div class="name">${s.name}</div>
-        <div class="blurb">${s.blurb}</div>
-        ${addressHtml}
-        ${tagHtml}
-      </div>
-    `;
-
-    const checkEl = el.querySelector('.check');
-    checkEl.addEventListener('click', (e) => {
-      e.stopPropagation();
-      checkedState[key] = !checkedState[key];
-      saveChecked();
-      renderDay(dayNum);
-      updateProgress();
-    });
-
-    if(s.lat){
-      el.querySelector('.marker').addEventListener('click', () => focusStop(dayNum, idx));
-      el.querySelector('.content').addEventListener('click', () => focusStop(dayNum, idx));
+  let seq=0,stopIdx=0;
+  day.stops.forEach((stop,rawIdx)=>{
+    if(stop.walk!==undefined){
+      // Walk/transit connector
+      const row=document.createElement('div');
+      row.className='connector-row';
+      row.innerHTML=`<div class="connector-line"></div><div class="walk-badge">${stop.transit?'🚆':'🚶'} ${stop.walk}</div>`;
+      panel.appendChild(row);
+      return;
     }
-    panel.appendChild(el);
 
-    if(idx < stops.length - 1){
-      const conn = document.createElement('div');
-      conn.className = 'connector';
-      panel.appendChild(conn);
+    const si=stopIdx++;
+    if(!stop.transit) seq++;
+    const k=key(di,si);
+    const isDone=!!checked[k];
+
+    const card=document.createElement('div');
+    card.className='stop-card'+(stop.transit?' is-transit':'')+(isDone?' done':'');
+
+    const inner=document.createElement('div');
+    inner.className='stop-inner';
+
+    // Checkbox
+    const checkWrap=document.createElement('div');
+    checkWrap.className='stop-check';
+    const box=document.createElement('div');
+    box.className='check-box'+(isDone?' checked':'');
+    box.addEventListener('click',()=>{checked[k]=!checked[k];save();renderDay(di);updateProgress();});
+    checkWrap.appendChild(box);
+
+    const seqEl=document.createElement('div');
+    seqEl.className='stop-seq'+(stop.transit?' transit':'');
+    seqEl.textContent=stop.transit?'↓':seq;
+
+    const content=document.createElement('div');
+    content.className='stop-content';
+
+    if(stop.time){const t=document.createElement('div');t.className='stop-time';t.textContent=stop.time;content.appendChild(t);}
+    const name=document.createElement('div');name.className='stop-name';name.textContent=stop.name;content.appendChild(name);
+    if(stop.blurb){const b=document.createElement('div');b.className='stop-blurb';b.textContent=stop.blurb;content.appendChild(b);}
+    if(stop.address){const a=document.createElement('a');a.className='stop-address';a.href=mapsUrl(stop.address);a.innerHTML='<span>📍</span>'+stop.address;content.appendChild(a);}
+    if(stop.tags&&stop.tags.length){
+      const tr=document.createElement('div');tr.className='tags';
+      stop.tags.forEach(t=>{if(!tagMeta[t])return;const tg=document.createElement('span');tg.className='tag '+tagMeta[t].cls;tg.textContent=tagMeta[t].label;tr.appendChild(tg);});
+      content.appendChild(tr);
     }
+
+    inner.appendChild(checkWrap);inner.appendChild(seqEl);inner.appendChild(content);
+    card.appendChild(inner);panel.appendChild(card);
   });
+
+  // MAP
+  const mapSection=document.createElement('div');
+  mapSection.className='map-section';
+  const mapLabel=document.createElement('div');
+  mapLabel.className='map-label';
+  mapLabel.innerHTML='🗺️ &nbsp;Day map — tap a pin for details';
+  mapSection.appendChild(mapLabel);
+  const mapDiv=document.createElement('div');
+  mapDiv.className='day-map';
+  mapDiv.id='map-'+di;
+  mapSection.appendChild(mapDiv);
+  panel.appendChild(mapSection);
+
+  return panel;
 }
 
-function drawMapForDay(dayNum){
-  markerLayer.clearLayers();
-  routeLayer.clearLayers();
-  activeMarkers = {};
-
-  const latlngs = [];
-  let seq = 0;
-
-  data[dayNum].forEach((s) => {
+function initMap(di){
+  if(maps[di]) return;
+  const day=days[di];
+  const pts=day.stops.filter(s=>s.lat&&s.lng&&!s.walk);
+  if(!pts.length) return;
+  const center=[pts[0].lat,pts[0].lng];
+  const m=L.map('map-'+di,{scrollWheelZoom:false,zoomControl:true}).setView(center,14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m);
+  const lls=[];
+  let seq=0;
+  pts.forEach(s=>{
     if(!s.transit) seq++;
-    if(!s.lat) return;
-    const marker = L.marker([s.lat, s.lng], {icon: pinIcon(seq)}).addTo(markerLayer);
-    marker.bindPopup(`<b>${s.name}</b><br>${s.time}<br><span class="popup-addr">${s.address || ''}</span>`);
-    activeMarkers[data[dayNum].indexOf(s)] = marker;
-    latlngs.push([s.lat, s.lng]);
+    const pin=L.divIcon({className:'',html:`<div class="custom-pin"><span>${s.transit?'→':seq}</span></div>`,iconSize:[28,28],iconAnchor:[14,26]});
+    L.marker([s.lat,s.lng],{icon:pin}).addTo(m).bindPopup(`<b>${s.name}</b>${s.time?'<br><small>'+s.time+'</small>':''}`);
+    lls.push([s.lat,s.lng]);
   });
+  if(lls.length>1) L.polyline(lls,{color:'#B8912A',weight:2,dashArray:'5,7',opacity:.8}).addTo(m);
+  m.fitBounds(lls,{padding:[28,28]});
+  maps[di]=m;
+}
 
-  if(latlngs.length > 1){
-    L.polyline(latlngs, {
-      color:'#c69a46',
-      weight:2.5,
-      dashArray:'6, 8',
-      opacity:0.85
-    }).addTo(routeLayer);
-  }
-
-  if(latlngs.length){
-    map.fitBounds(latlngs, {padding:[40,40]});
+function renderDay(di){
+  const existing=document.getElementById('panel-'+di);
+  const newP=buildDay(di);
+  if(existing){
+    const wasActive=existing.classList.contains('active');
+    newP.className='day-panel'+(wasActive?' active':'');
+    existing.replaceWith(newP);
+    if(wasActive) setTimeout(()=>initMap(di),100);
+  } else {
+    document.getElementById('panels').appendChild(newP);
   }
 }
 
-function focusStop(dayNum, idx){
-  document.querySelectorAll(`#panel-${dayNum} .stop`).forEach(el => el.classList.remove('active'));
-  document.querySelector(`#panel-${dayNum} .stop[data-idx="${idx}"]`).classList.add('active');
-  const marker = activeMarkers[idx];
-  if(marker){
-    map.setView(marker.getLatLng(), 16, {animate:true});
-    marker.openPopup();
+function switchDay(di){
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.day-btn').forEach((b,i)=>b.classList.toggle('active',i===di));
+  const panel=document.getElementById('panel-'+di);
+  if(panel){
+    panel.classList.add('active');
+    const btn=document.querySelectorAll('.day-btn')[di];
+    if(btn) btn.scrollIntoView({inline:'center',behavior:'smooth'});
+    setTimeout(()=>initMap(di),150);
   }
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-document.querySelectorAll('.daytab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.daytab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const day = tab.dataset.day;
-    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('panel-'+day).classList.add('active');
-    drawMapForDay(day);
-  });
+const nav=document.getElementById('dayNav');
+const panelsEl=document.getElementById('panels');
+
+days.forEach((day,di)=>{
+  const btn=document.createElement('button');
+  btn.className='day-btn'+(di===0?' active':'');
+  btn.textContent=day.label;
+  btn.addEventListener('click',()=>switchDay(di));
+  nav.appendChild(btn);
+  const panel=buildDay(di);
+  if(di===0) panel.classList.add('active');
+  panelsEl.appendChild(panel);
 });
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  checkedState = {};
-  saveChecked();
-  renderDay(1);
-  renderDay(2);
-  updateProgress();
-});
+document.getElementById('resetBtn').addEventListener('click',()=>{checked={};save();days.forEach((_,di)=>renderDay(di));updateProgress();});
 
-loadChecked();
-initMap();
-renderDay(1);
-renderDay(2);
-drawMapForDay(1);
+setTimeout(()=>initMap(0),200);
 updateProgress();
 </script>
-
 </body>
 </html>
